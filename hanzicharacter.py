@@ -6,8 +6,14 @@ class Character:
         w=WebScrapper(hanzi)
         data = w.getHanziData()
         self.translation = w.getTranslation()
-        self.strokesNumber = int(data['Number of strokes'])
-        self.frequencyRank = int(data['Frequency rank'])
+        if 'Frequency rank' in data:
+            self.frequencyRank = int(data['Frequency rank'])
+        else:
+            self.frequencyRank = 'None'
+        if 'Number of strokes' in data:
+            self.strokesNumber = int(data['Number of strokes'])
+        else:
+            self.strokesNumber = 'None'
         self.codepoint = "U+"+str(hex(ord(hanzi))).replace("0x","").upper()
         self.indexNumber = int(data['General standard index number'])
     def print(self):

@@ -6,7 +6,8 @@ class ImageRecognition:
     def __init__(self):
         self.path= r"C:\Program Files\Tesseract-OCR\tesseract.exe"
         pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
-    def checkIfMatch(self,label1, label2):
+    @staticmethod
+    def checkIfMatch(label1, label2):
         if (label1["text"] == label2["text"]):
             return True
         return False
@@ -15,23 +16,23 @@ class ImageRecognition:
         y = window.winfo_rooty() + widget.winfo_y()
         x1 = x + widget.winfo_width()
         y1 = y + widget.winfo_height()
-        ImageGrab.grab().crop((x, y, x1, y1)).save('image.png')
+        ImageGrab.grab().crop((x, y, x1, y1)).save('hanzirecognition/image.png')
     def paste(self):
-        img1 = Image.open('first.png')
+        img1 = Image.open('hanzirecognition/first.png')
         img1 = img1.resize((100, 100))
-        img2 = Image.open('second.png')
+        img2 = Image.open('hanzirecognition/second.png')
         img2 = img2.resize((100, 100))
-        img3 = Image.open('third.png')
+        img3 = Image.open('hanzirecognition/third.png')
         img3 = img3.resize((100, 100))
-        img = Image.open('image.png', 'r')
+        img = Image.open('hanzirecognition/image.png', 'r')
         img = img.resize((100, 100))
         background = Image.new('RGBA', (1000, 1000), (255, 255, 255, 255))
         background.paste(img1, (100, 500))
         background.paste(img2, (200, 500))
         background.paste(img3, (300, 500))
         background.paste(img, (400, 500))
-        background.save('out.png')
+        background.save('hanzirecognition/out.png')
     def calculate(self):
-        img = cv2.imread('out.png')
+        img = cv2.imread('hanzirecognition/out.png')
         text = pytesseract.image_to_string(img, lang='chi_sim')
         return  text[len(text) - 2]
