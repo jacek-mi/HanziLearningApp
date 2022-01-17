@@ -36,3 +36,8 @@ class ImageRecognition:
         img = cv2.imread('hanzirecognition/out.png')
         text = pytesseract.image_to_string(img, lang='chi_sim')
         return  text[len(text) - 2]
+
+    def recognize(self,canvas,window,frame):
+        self.getter(canvas, window, frame)
+        self.paste()
+        return self.calculate()

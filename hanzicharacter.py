@@ -57,3 +57,29 @@ class WebScrapper():
         myDict = dict(zip(keys,values))
         return myDict
 
+class PageScrapper():
+    def __init__(self,hsk):
+        self.url = "http://hanzidb.org/character-list/hsk/level-" + str(hsk)
+        self.page = requests.get(self.url)
+        self.soup = BeautifulSoup(self.page.content, "html.parser")
+    def getHanziList(self):
+        href = self.soup.find_all("a",href=True)
+        pagesList = []
+        signsOnPage = []
+        for element in href:
+            if self.url.replace('http://hanzidb.org/',"") in str(element):
+                pagesList.append(
+                    int(str(element).replace('<a href="/character-list/hsk/level-',"").replace('</a>',"").split(">")[1]))
+        for element in href:
+            if "Kangxi" not in str(element) and "character/" in str(element)  :
+                signsOnPage.append(str(element).replace('">',"").replace('<a href="/character/',"").replace('</a>',"")[:1])
+        for i in range(2,max(pagesList)+1):
+            url = self.url + "?page=" + str(i)
+            page = requests.get(url)
+            soup = BeautifulSoup(page.content, "html.parser")
+            href = soup.find_all("a",href=True)
+            for element in href:
+                if "Kangxi" not in str(element) and "character/" in str(element):
+                    signsOnPage.append(
+                        str(element).replace('">', "").replace('<a href="/character/', "").replace('</a>', "")[:1])
+        return list(dict.fromkeys(signsOnPage))
