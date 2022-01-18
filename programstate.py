@@ -1,6 +1,3 @@
-
-
-
 class ProgramState():
     def __init__(self):
         self.currentWidgetList = []
@@ -15,6 +12,7 @@ class ProgramState():
         self.listOfLearnedCharacters = []
         self.currentLearningIndex = 0
         self.currentTrainingIndex = 0
+
 
     def createList(self,listVar,*args):
         for arg in args:

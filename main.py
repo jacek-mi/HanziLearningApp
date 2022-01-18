@@ -1,4 +1,3 @@
-
 import random
 import tkinter as tk
 
@@ -144,10 +143,12 @@ def main():
         clearPage()
         gu.clearCanvas(canvas)
         state.placeTestMode()
+        setNewValues()
     def learnModePlaceButton():
         clearPage()
         gu.clearCanvas(canvas)
         state.placeLearnMode()
+        setNewValues()
     def browseModePlaceButton():
         clearPage()
         gu.clearCanvas(canvas)
@@ -241,7 +242,6 @@ def main():
                     for tr in c.translation[key]:
                         text = text + " -" + tr.replace(hanzi,"") + "\n"
                     text = text + "\n"
-
                 translationData.insert('end', text)
                 translationData.configure(state='disabled')
 
@@ -269,9 +269,12 @@ def main():
     def addToLearningList():
         addToTL = state.addToList(state.listOfTrainingCharacters)
         remFromLL = state.removeFromList(state.listOfLearningCharacters)
-        if state.currentWidgetList == state.learnWidgetList:
+        if state.currentWidgetList == state.learnWidgetList and state.listOfLearningCharacters:
             addToTL(signHanziData["text"])
             remFromLL(signHanziData["text"])
+            state.currentLearningIndex=0
+            setNewValues()
+            getNextCharacter()
             return
         addToLL = state.addToList(state.listOfLearningCharacters)
         remFromAL = state.removeFromList(state.listOfAllCharacters)
@@ -297,6 +300,63 @@ def main():
             currentListOfSignsData.insert('end', text)
             currentListOfSignsData.configure(state='disabled')
             # currentListOfSignsData.place(x=200.0, y=205)
+
+    def setNewValues():
+        if state.currentWidgetList == state.learnWidgetList:
+            if state.listOfLearningCharacters:
+                hanzi = state.listOfLearningCharacters[state.currentLearningIndex]
+                signHanziData["text"] = hanzi
+                # c = hc.Character(chr(int(hanzi, base=16)))
+                c = hc.Character(hanzi)
+                numberOfStrokesData["text"] = c.strokesNumber
+                frequencyRankData["text"] = c.frequencyRank
+                unicodeCodepointData["text"] = c.codepoint
+                translationData.configure(state='normal')
+                translationData.delete(1.0, tk.END)
+                text = ""
+                for key in c.translation:
+                    text = text + key + "\n\n"
+                    for tr in c.translation[key]:
+                        text = text + " -" + tr + "\n"
+                    text = text + "\n"
+
+                translationData.insert('end', text)
+                translationData.configure(state='disabled')
+            else:
+                text=""
+                signHanziData["text"] = "Empty List"
+                numberOfStrokesData["text"] = ""
+                frequencyRankData["text"] = ""
+                unicodeCodepointData["text"] = ""
+                translationData.configure(state='normal')
+                translationData.delete(1.0, tk.END)
+                translationData.insert('end', text)
+                translationData.configure(state='disabled')
+        if state.currentWidgetList == state.testWidgetList:
+            if state.listOfTrainingCharacters:
+                hanzi = state.listOfTrainingCharacters[state.currentTrainingIndex]
+
+                c = hc.Character(hanzi)
+                translationData.configure(state='normal')
+                translationData.delete(1.0, tk.END)
+                text = ""
+                for key in c.translation:
+                    for tr in c.translation[key]:
+                        text = text + " -" + tr.replace(hanzi, "") + "\n"
+                    text = text + "\n"
+                translationData.insert('end', text)
+                translationData.configure(state='disabled')
+            else:
+                text=""
+                capturedCharacterData["text"]=""
+                signHanziData["text"] = "Empty List"
+                numberOfStrokesData["text"] = ""
+                frequencyRankData["text"] = ""
+                unicodeCodepointData["text"] = ""
+                translationData.configure(state='normal')
+                translationData.delete(1.0, tk.END)
+                translationData.insert('end', text)
+                translationData.configure(state='disabled')
 
 
     state.createList(state.alwaysOnWidgetList,title,learnButton,practiceButton,browseButton)
