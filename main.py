@@ -57,11 +57,11 @@ def main():
     previousButtonImage = tk.PhotoImage(
         file=relative_to_assets("previous.png"))
     previousButton = tk.Button(image=previousButtonImage,borderwidth=0,highlightthickness=0,
-                               command=lambda: print("previous clicked"),relief="flat")
+                               command=lambda: getPreviousCharacter(),relief="flat")
 
     nextButtonImage = tk.PhotoImage(file=relative_to_assets("next.png"))
     nextButton = tk.Button(image=nextButtonImage,borderwidth=0,highlightthickness=0,
-                           command=lambda: getRandomCharacter(),relief="flat")
+                           command=lambda: getNextCharacter(),relief="flat")
 
     capturedCharacter = tk.Label(frame, bg="#256150", anchor="nw", text="Captured Sign:",
                                  font=("Montserrat Bold", 36 * -1), fg="#FFFFFF")
@@ -154,6 +154,85 @@ def main():
         state.placeBrowseMode()
     def paint(event):
         gu.paint(event,canvas)
+    def getNextCharacter():
+        if state.currentWidgetList == state.learnWidgetList:
+            if state.listOfLearningCharacters:
+                if (state.currentLearningIndex == len(state.listOfLearningCharacters)-1):
+                    state.currentLearningIndex = 0
+                else:
+                    state.currentLearningIndex = state.currentLearningIndex + 1
+                hanzi =state.listOfLearningCharacters[state.currentLearningIndex]
+                signHanziData["text"] = hanzi
+                # c = hc.Character(chr(int(hanzi, base=16)))
+                c = hc.Character(hanzi)
+                numberOfStrokesData["text"] = c.strokesNumber
+                frequencyRankData["text"] = c.frequencyRank
+                unicodeCodepointData["text"] = c.codepoint
+                translationData.configure(state='normal')
+                translationData.delete(1.0, tk.END)
+                text = ""
+                for key in c.translation:
+                    text = text + key + "\n\n"
+                    for tr in c.translation[key]:
+                        text = text + " -" + tr + "\n"
+                    text = text + "\n"
+
+                translationData.insert('end', text)
+                translationData.configure(state='disabled')
+        if state.currentWidgetList == state.testWidgetList:
+            if state.listOfTrainingCharacters:
+                if (state.currentLearningIndex == len(state.listOfLearningCharacters)-1):
+                    state.currentLearningIndex = 0
+                else:
+                    state.currentLearningIndex = state.currentLearningIndex + 1
+                hanzi =state.listOfLearningCharacters[state.currentLearningIndex]
+                signHanziData["text"] = hanzi
+                # c = hc.Character(chr(int(hanzi, base=16)))
+                c = hc.Character(hanzi)
+                numberOfStrokesData["text"] = c.strokesNumber
+                frequencyRankData["text"] = c.frequencyRank
+                unicodeCodepointData["text"] = c.codepoint
+                translationData.configure(state='normal')
+                translationData.delete(1.0, tk.END)
+                text = ""
+                for key in c.translation:
+                    text = text + key + "\n\n"
+                    for tr in c.translation[key]:
+                        text = text + " -" + tr + "\n"
+                    text = text + "\n"
+
+                translationData.insert('end', text)
+                translationData.configure(state='disabled')
+
+
+
+    def getPreviousCharacter():
+        if state.currentWidgetList == state.learnWidgetList:
+            if state.listOfLearningCharacters:
+                if (state.currentLearningIndex == 0):
+                    state.currentLearningIndex = len(state.listOfLearningCharacters)-1
+                else:
+                    state.currentLearningIndex = state.currentLearningIndex - 1
+                hanzi =state.listOfLearningCharacters[state.currentLearningIndex]
+                signHanziData["text"] = hanzi
+                # c = hc.Character(chr(int(hanzi, base=16)))
+                c = hc.Character(hanzi)
+                numberOfStrokesData["text"] = c.strokesNumber
+                frequencyRankData["text"] = c.frequencyRank
+                unicodeCodepointData["text"] = c.codepoint
+                translationData.configure(state='normal')
+                translationData.delete(1.0, tk.END)
+                text = ""
+                for key in c.translation:
+                    text = text + key + "\n\n"
+                    for tr in c.translation[key]:
+                        text = text + " -" + tr + "\n"
+                    text = text + "\n"
+
+                translationData.insert('end', text)
+                translationData.configure(state='disabled')
+
+
     def getRandomCharacter():
         #hanzi = chr(int(listOfCharacters[random.randint(0, len(listOfCharacters) - 1)], base=16))
         hanzi = listOfCharacters[random.randint(0, len(listOfCharacters) - 1)]
@@ -175,6 +254,8 @@ def main():
         translationData.insert('end', text)
         translationData.configure(state='disabled')
     def addToLearningList():
+        addToLL = state.addToList(state.listOfLearningCharacters)
+        remFromLL = state.removeFromList(state.listOfAllCharacters)
         if currentListOfSignsData.tag_ranges("sel") and state.listOfAllCharacters:
             start = int(str(currentListOfSignsData.tag_ranges("sel")[0]).replace("1.", ""))
             end = int(str(currentListOfSignsData.tag_ranges("sel")[1]).replace("1.", ""))
@@ -183,13 +264,13 @@ def main():
                 text = text + key + " "
             for i in range(start, end):
                 if text[i] != " ":
-                    state.listOfAllCharacters.remove(text[i])
-                    state.listOfTrainingCharacters.append(text[i])
+                    addToLL(text[i])
+                    remFromLL(text[i])
             text = ""
             for key in state.listOfAllCharacters:
                 text = text + key + " "
             print(state.listOfAllCharacters)
-            print(state.listOfTrainingCharacters)
+            print(state.listOfLearningCharacters)
             # currentListOfSignsData.place_forget()
             currentListOfSignsData.tag_remove(tk.SEL, "1.0", tk.END)
             currentListOfSignsData.configure(state='normal')

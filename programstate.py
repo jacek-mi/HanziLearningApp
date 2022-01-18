@@ -10,6 +10,7 @@ class ProgramState():
         self.browseWidgetList = []
         self.currentHsk = 1;
         self.listOfAllCharacters = []
+        self.listOfLearningCharacters = []
         self.listOfTrainingCharacters = []
         self.listOfLearnedCharacters = []
         self.currentLearningIndex = 0
@@ -24,8 +25,8 @@ class ProgramState():
     def addToList(self,listVar):
         return lambda sign : listVar.append(sign)
 
-    def dropFromList(self,listVar):
-        return lambda sign : listVar.drop(sign)
+    def removeFromList(self,listVar):
+        return lambda sign : listVar.remove(sign)
 
     def clearList(self,listVar):
         listVar.clear()
