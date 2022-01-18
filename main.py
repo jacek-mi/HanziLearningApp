@@ -181,29 +181,23 @@ def main():
                 translationData.configure(state='disabled')
         if state.currentWidgetList == state.testWidgetList:
             if state.listOfTrainingCharacters:
-                if (state.currentLearningIndex == len(state.listOfLearningCharacters)-1):
-                    state.currentLearningIndex = 0
+                if (state.currentTrainingIndex == len(state.listOfTrainingCharacters)-1):
+                    state.currentTrainingIndex = 0
                 else:
-                    state.currentLearningIndex = state.currentLearningIndex + 1
-                hanzi =state.listOfLearningCharacters[state.currentLearningIndex]
-                signHanziData["text"] = hanzi
-                # c = hc.Character(chr(int(hanzi, base=16)))
+                    state.currentTrainingIndex = state.currentTrainingIndex + 1
+                hanzi = state.listOfTrainingCharacters[state.currentTrainingIndex]
+
                 c = hc.Character(hanzi)
-                numberOfStrokesData["text"] = c.strokesNumber
-                frequencyRankData["text"] = c.frequencyRank
-                unicodeCodepointData["text"] = c.codepoint
                 translationData.configure(state='normal')
                 translationData.delete(1.0, tk.END)
                 text = ""
                 for key in c.translation:
-                    text = text + key + "\n\n"
                     for tr in c.translation[key]:
-                        text = text + " -" + tr + "\n"
+                        text = text + " -" + tr.replace(hanzi,"") + "\n"
                     text = text + "\n"
 
                 translationData.insert('end', text)
                 translationData.configure(state='disabled')
-
 
 
     def getPreviousCharacter():
@@ -231,6 +225,25 @@ def main():
 
                 translationData.insert('end', text)
                 translationData.configure(state='disabled')
+        if state.currentWidgetList == state.testWidgetList:
+            if state.listOfTrainingCharacters:
+                if (state.currentTrainingIndex == 0):
+                    state.currentTrainingIndex = len(state.listOfTrainingCharacters) - 1
+                else:
+                    state.currentTrainingIndex = state.currentTrainingIndex - 1
+                hanzi = state.listOfTrainingCharacters[state.currentTrainingIndex]
+
+                c = hc.Character(hanzi)
+                translationData.configure(state='normal')
+                translationData.delete(1.0, tk.END)
+                text = ""
+                for key in c.translation:
+                    for tr in c.translation[key]:
+                        text = text + " -" + tr.replace(hanzi,"") + "\n"
+                    text = text + "\n"
+
+                translationData.insert('end', text)
+                translationData.configure(state='disabled')
 
 
     def getRandomCharacter():
@@ -254,8 +267,14 @@ def main():
         translationData.insert('end', text)
         translationData.configure(state='disabled')
     def addToLearningList():
+        addToTL = state.addToList(state.listOfTrainingCharacters)
+        remFromLL = state.removeFromList(state.listOfLearningCharacters)
+        if state.currentWidgetList == state.learnWidgetList:
+            addToTL(signHanziData["text"])
+            remFromLL(signHanziData["text"])
+            return
         addToLL = state.addToList(state.listOfLearningCharacters)
-        remFromLL = state.removeFromList(state.listOfAllCharacters)
+        remFromAL = state.removeFromList(state.listOfAllCharacters)
         if currentListOfSignsData.tag_ranges("sel") and state.listOfAllCharacters:
             start = int(str(currentListOfSignsData.tag_ranges("sel")[0]).replace("1.", ""))
             end = int(str(currentListOfSignsData.tag_ranges("sel")[1]).replace("1.", ""))
@@ -265,7 +284,7 @@ def main():
             for i in range(start, end):
                 if text[i] != " ":
                     addToLL(text[i])
-                    remFromLL(text[i])
+                    remFromAL(text[i])
             text = ""
             for key in state.listOfAllCharacters:
                 text = text + key + " "
@@ -287,7 +306,7 @@ def main():
     state.createList(state.learnWidgetList,canvas,clearButton,checkButton,previousButton,
                      nextButton,capturedCharacter,capturedCharacterData,signHanzi,signHanziData,
                      numberOfStrokes,numberOfStrokesData,frequencyRank,frequencyRankData,
-                     unicodeCodepoint,unicodeCodepointData,translation,translationData,scrollbar)
+                     unicodeCodepoint,unicodeCodepointData,translation,translationData,scrollbar,addButton)
     state.placeAlwaysOnWidgets()
     learnModePlaceButton()
     window.bind('<Key>', handle_keypress)

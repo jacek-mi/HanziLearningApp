@@ -63,6 +63,7 @@ class ProgramState():
         self.learnWidgetList[15].place(x=630.0, y=336.0)
         self.learnWidgetList[16].place(x=630.0, y=381)
         self.learnWidgetList[17].place(x=975, y=382, height=282)
+        self.learnWidgetList[18].place(x=1000, y=420)
 
     def placeBrowseMode(self):
         self.currentWidgetList = self.browseWidgetList
