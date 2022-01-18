@@ -15,16 +15,19 @@ def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
 
 def main():
+    state = ps.ProgramState()
     recognition=ir.ImageRecognition()
     p = hc.PageScrapper('1')
-    listOfCharacters = p.getHanziList()
+    state.listOfAllCharacters = p.getHanziList()
     window = tk.Tk()
     window.title('Project')
     window.geometry("1200x800")
     window.resizable(False, False)
     frame = tk.Frame(master=window, width=1200, height=800,bg="#256150")
     frame.pack()
-    widgetList = []
+    addButtonImage = tk.PhotoImage(file=relative_to_assets("add.png"))
+    addButton = tk.Button(image=addButtonImage,borderwidth=0,highlightthickness=0,
+                            command=lambda: addToLearningList(),relief="flat")
     title = tk.Label(frame, bg="#256150", anchor="nw", text="Hanzi Learing App",
                      font=("Montserrat Bold", 64 * -1), fg="#FFFFFF")
 
@@ -113,7 +116,7 @@ def main():
     currentListOfSignsData.configure(state='normal')
     currentListOfSignsData.delete(1.0, tk.END)
     text = ""
-    for key in listOfCharacters:
+    for key in state.listOfAllCharacters:
         text = text + key + " "
 
     currentListOfSignsData.insert('end', text)
@@ -134,22 +137,7 @@ def main():
             capturedCharacterData["text"]=recognition.calculate()
         if (event.char == 'e'):
             if (recognition.checkIfMatch(capturedCharacterData, signHanziData)):
-                print("")
-            if currentListOfSignsData.tag_ranges("sel"):
-                start=int(str(currentListOfSignsData.tag_ranges("sel")[0]).replace("1.",""))
-                end=int(str(currentListOfSignsData.tag_ranges("sel")[1]).replace("1.",""))
-                selectedText = ""
-                for i in range (start,end ):
-                    selectedText=selectedText+text[i]
-                print(selectedText)
-                text = text.replace(selectedText,"")
-                #currentListOfSignsData.place_forget()
-                currentListOfSignsData.tag_remove(tk.SEL, "1.0", tk.END)
-                currentListOfSignsData.configure(state='normal')
-                currentListOfSignsData.delete(1.0, tk.END)
-                currentListOfSignsData.insert('end', text)
-                currentListOfSignsData.configure(state='disabled')
-                #currentListOfSignsData.place(x=200.0, y=205)
+                print("wow")
     def clearPage():
         state.removeWidgets(state.currentWidgetList)
     def testModePlaceButton():
@@ -164,10 +152,8 @@ def main():
         clearPage()
         gu.clearCanvas(canvas)
         state.placeBrowseMode()
-
     def paint(event):
         gu.paint(event,canvas)
-
     def getRandomCharacter():
         #hanzi = chr(int(listOfCharacters[random.randint(0, len(listOfCharacters) - 1)], base=16))
         hanzi = listOfCharacters[random.randint(0, len(listOfCharacters) - 1)]
@@ -188,10 +174,33 @@ def main():
 
         translationData.insert('end', text)
         translationData.configure(state='disabled')
+    def addToLearningList():
+        if currentListOfSignsData.tag_ranges("sel") and state.listOfAllCharacters:
+            start = int(str(currentListOfSignsData.tag_ranges("sel")[0]).replace("1.", ""))
+            end = int(str(currentListOfSignsData.tag_ranges("sel")[1]).replace("1.", ""))
+            text = ""
+            for key in state.listOfAllCharacters:
+                text = text + key + " "
+            for i in range(start, end):
+                if text[i] != " ":
+                    state.listOfAllCharacters.remove(text[i])
+                    state.listOfTrainingCharacters.append(text[i])
+            text = ""
+            for key in state.listOfAllCharacters:
+                text = text + key + " "
+            print(state.listOfAllCharacters)
+            print(state.listOfTrainingCharacters)
+            # currentListOfSignsData.place_forget()
+            currentListOfSignsData.tag_remove(tk.SEL, "1.0", tk.END)
+            currentListOfSignsData.configure(state='normal')
+            currentListOfSignsData.delete(1.0, tk.END)
+            currentListOfSignsData.insert('end', text)
+            currentListOfSignsData.configure(state='disabled')
+            # currentListOfSignsData.place(x=200.0, y=205)
 
-    state = ps.ProgramState()
+
     state.createList(state.alwaysOnWidgetList,title,learnButton,practiceButton,browseButton)
-    state.createList(state.browseWidgetList, currentListOfSigns, currentListOfSignsData, scrollbarList)
+    state.createList(state.browseWidgetList, currentListOfSigns, currentListOfSignsData, scrollbarList,addButton)
     state.createList(state.testWidgetList,canvas,clearButton,checkButton,previousButton,nextButton,capturedCharacter
                      ,capturedCharacterData,translation,translationData,scrollbar)
     state.createList(state.learnWidgetList,canvas,clearButton,checkButton,previousButton,

@@ -1,3 +1,6 @@
+
+
+
 class ProgramState():
     def __init__(self):
         self.currentWidgetList = []
@@ -65,6 +68,7 @@ class ProgramState():
         self.browseWidgetList[0].place(x=200.0, y=160.0)
         self.browseWidgetList[1].place(x=200.0, y=205)
         self.browseWidgetList[2].place(x=880, y=206, height=352)
+        self.browseWidgetList[3].place(x=600.0,y=600)
 
     def placeTestMode(self):
         self.currentWidgetList = self.testWidgetList
