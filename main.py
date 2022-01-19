@@ -184,96 +184,11 @@ def main():
         translationData.insert('end', text)
         translationData.configure(state='disabled')
     def addToLearningList():
-        addToTL = state.addToList(state.listOfTrainingCharacters)
-        remFromLL = state.removeFromList(state.listOfLearningCharacters)
-        if state.currentWidgetList == state.learnWidgetList and state.listOfLearningCharacters:
-            addToTL(signHanziData["text"])
-            remFromLL(signHanziData["text"])
-            state.currentLearningIndex=0
-            setNewValues()
-            getNextCharacter()
-            return
-        addToLL = state.addToList(state.listOfLearningCharacters)
-        remFromAL = state.removeFromList(state.listOfAllCharacters)
-        if currentListOfSignsData.tag_ranges("sel") and state.listOfAllCharacters:
-            start = int(str(currentListOfSignsData.tag_ranges("sel")[0]).replace("1.", ""))
-            end = int(str(currentListOfSignsData.tag_ranges("sel")[1]).replace("1.", ""))
-            text = ""
-            for key in state.listOfAllCharacters:
-                text = text + key + " "
-            for i in range(start, end):
-                if text[i] != " ":
-                    addToLL(text[i])
-                    remFromAL(text[i])
-            text = ""
-            for key in state.listOfAllCharacters:
-                text = text + key + " "
-            print(state.listOfAllCharacters)
-            print(state.listOfLearningCharacters)
-            # currentListOfSignsData.place_forget()
-            currentListOfSignsData.tag_remove(tk.SEL, "1.0", tk.END)
-            currentListOfSignsData.configure(state='normal')
-            currentListOfSignsData.delete(1.0, tk.END)
-            currentListOfSignsData.insert('end', text)
-            currentListOfSignsData.configure(state='disabled')
-            # currentListOfSignsData.place(x=200.0, y=205)
+        gu.addCharacter(state,hc)
+
 
     def setNewValues():
-        if state.currentWidgetList == state.learnWidgetList:
-            if state.listOfLearningCharacters:
-                hanzi = state.listOfLearningCharacters[state.currentLearningIndex]
-                signHanziData["text"] = hanzi
-                # c = hc.Character(chr(int(hanzi, base=16)))
-                c = hc.Character(hanzi)
-                numberOfStrokesData["text"] = c.strokesNumber
-                frequencyRankData["text"] = c.frequencyRank
-                unicodeCodepointData["text"] = c.codepoint
-                translationData.configure(state='normal')
-                translationData.delete(1.0, tk.END)
-                text = ""
-                for key in c.translation:
-                    text = text + key + "\n\n"
-                    for tr in c.translation[key]:
-                        text = text + " -" + tr + "\n"
-                    text = text + "\n"
-
-                translationData.insert('end', text)
-                translationData.configure(state='disabled')
-            else:
-                text=""
-                signHanziData["text"] = "Empty List"
-                numberOfStrokesData["text"] = ""
-                frequencyRankData["text"] = ""
-                unicodeCodepointData["text"] = ""
-                translationData.configure(state='normal')
-                translationData.delete(1.0, tk.END)
-                translationData.insert('end', text)
-                translationData.configure(state='disabled')
-        if state.currentWidgetList == state.testWidgetList:
-            if state.listOfTrainingCharacters:
-                hanzi = state.listOfTrainingCharacters[state.currentTrainingIndex]
-
-                c = hc.Character(hanzi)
-                translationData.configure(state='normal')
-                translationData.delete(1.0, tk.END)
-                text = ""
-                for key in c.translation:
-                    for tr in c.translation[key]:
-                        text = text + " -" + tr.replace(hanzi, "") + "\n"
-                    text = text + "\n"
-                translationData.insert('end', text)
-                translationData.configure(state='disabled')
-            else:
-                text=""
-                capturedCharacterData["text"]=""
-                signHanziData["text"] = "Empty List"
-                numberOfStrokesData["text"] = ""
-                frequencyRankData["text"] = ""
-                unicodeCodepointData["text"] = ""
-                translationData.configure(state='normal')
-                translationData.delete(1.0, tk.END)
-                translationData.insert('end', text)
-                translationData.configure(state='disabled')
+        gu.setNewValues(state,hc)
 
 
     state.createList(state.alwaysOnWidgetList,title,learnButton,practiceButton,browseButton)
