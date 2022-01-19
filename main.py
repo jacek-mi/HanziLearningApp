@@ -1,3 +1,5 @@
+
+import savetopdf
 import random
 import tkinter as tk
 
@@ -14,6 +16,7 @@ def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
 
 def main():
+
     state = ps.ProgramState()
     recognition=ir.ImageRecognition()
     p = hc.PageScrapper('1')
@@ -29,7 +32,6 @@ def main():
                             command=lambda: addToLearningList(),relief="flat")
     title = tk.Label(frame, bg="#256150", anchor="nw", text="Hanzi Learing App",
                      font=("Montserrat Bold", 64 * -1), fg="#FFFFFF")
-
     canvas = tk.Canvas(frame, bg="white",height=480.0,width=500.0)
 
     learnButtonImage = tk.PhotoImage(file=relative_to_assets("learn.png"))
@@ -45,13 +47,12 @@ def main():
 
     clearButtonImage = tk.PhotoImage(file=relative_to_assets("clear.png"))
     clearButton = tk.Button(image=clearButtonImage,borderwidth=0,highlightthickness=0,
-                            command=lambda: gu.clearCanvas(canvas)
-                            ,relief="flat")
+    command=lambda: gu.clearCanvas(canvas) ,relief="flat")
 
     checkButtonImage = tk.PhotoImage(file=relative_to_assets("check.png"))
     checkButton = tk.Button(image=checkButtonImage,borderwidth=0,highlightthickness=0,
-                            command=lambda: recognizeHanzi(capturedCharacterData,recognition,canvas,window,frame)
-                            ,relief="flat")
+    command=lambda: recognizeHanzi(state,capturedCharacterData, recognition, canvas, window, frame)
+    ,relief="flat")
 
     previousButtonImage = tk.PhotoImage(
         file=relative_to_assets("previous.png"))
@@ -114,6 +115,7 @@ def main():
     currentListOfSignsData['yscrollcommand'] = scrollbarList.set
     currentListOfSignsData.configure(state='normal')
     currentListOfSignsData.delete(1.0, tk.END)
+
     text = ""
     for key in state.listOfAllCharacters:
         text = text + key + " "
@@ -123,7 +125,7 @@ def main():
 
     def handle_keypress(event):
         if (event.char == 'd'):
-            clearPage()
+            savetopdf.saveLearningResults(state)
         if (event.char == 'f'):
             learnModePlaceButton()
         if (event.char == 'c'):
@@ -137,6 +139,21 @@ def main():
         if (event.char == 'e'):
             if (recognition.checkIfMatch(capturedCharacterData, signHanziData)):
                 print("wow")
+
+    def recognizeHanzi(state,capturedCharacterData, recognition, canvas, window, frame):
+        if state.currentWidgetList==state.learnWidgetList:
+            capturedCharacterData["text"] = recognition.recognize(canvas, window, frame)
+        if state.currentWidgetList==state.testWidgetList and state.listOfTrainingCharacters:
+            sign = recognition.recognize(canvas, window, frame)
+            if recognition.checkIfCapturedSignIsCorrect(state,sign):
+                addToLearnedL = state.addToList(state.listOfLearnedCharacters)
+                remFromTL = state.removeFromList(state.listOfTrainingCharacters)
+                addToLearnedL(sign)
+                remFromTL(sign)
+                print(state.listOfLearnedCharacters)
+                setNewValues()
+                gu.clearCanvas(canvas)
+
     def clearPage():
         state.removeWidgets(state.currentWidgetList)
     def testModePlaceButton():
@@ -162,7 +179,6 @@ def main():
     def getPreviousCharacter():
         gu.getPreviousCharacter(state,hc)
 
-
     def getRandomCharacter():
         #hanzi = chr(int(listOfCharacters[random.randint(0, len(listOfCharacters) - 1)], base=16))
         hanzi = listOfCharacters[random.randint(0, len(listOfCharacters) - 1)]
@@ -184,27 +200,28 @@ def main():
         translationData.insert('end', text)
         translationData.configure(state='disabled')
     def addToLearningList():
-        gu.addCharacter(state,hc)
-
+        gu.addCharacter(state,hc,canvas)
 
     def setNewValues():
         gu.setNewValues(state,hc)
 
-
     state.createList(state.alwaysOnWidgetList,title,learnButton,practiceButton,browseButton)
-    state.createList(state.browseWidgetList, currentListOfSigns, currentListOfSignsData, scrollbarList,addButton)
-    state.createList(state.testWidgetList,canvas,clearButton,checkButton,previousButton,nextButton,capturedCharacter
-                     ,capturedCharacterData,translation,translationData,scrollbar)
+    state.createList(state.browseWidgetList, currentListOfSigns, currentListOfSignsData,
+                     scrollbarList,addButton)
+
+    state.createList(state.testWidgetList,canvas,clearButton,checkButton,previousButton,nextButton,
+                     capturedCharacter,capturedCharacterData,translation,translationData,scrollbar)
+
     state.createList(state.learnWidgetList,canvas,clearButton,checkButton,previousButton,
                      nextButton,capturedCharacter,capturedCharacterData,signHanzi,signHanziData,
                      numberOfStrokes,numberOfStrokesData,frequencyRank,frequencyRankData,
                      unicodeCodepoint,unicodeCodepointData,translation,translationData,scrollbar,addButton)
+
     state.placeAlwaysOnWidgets()
     learnModePlaceButton()
     window.bind('<Key>', handle_keypress)
     canvas.bind("<B1-Motion>", paint)
     window.mainloop()
-
 
 def readLineByLine():
     f = open("TGSCC-Unicode.txt", 'r')
@@ -215,8 +232,6 @@ def readLineByLine():
     print(chr(int(list[0], base=16)))
     return list
 
-def recognizeHanzi(capturedCharacterData,recognition,canvas,window,frame):
-    capturedCharacterData["text"]=recognition.recognize(canvas,window,frame)
 
 
 if __name__ == "__main__":

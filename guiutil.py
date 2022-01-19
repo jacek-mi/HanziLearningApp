@@ -12,9 +12,20 @@ def paint(event,canvas):
     canvas.create_oval(x1, y1, x2,
                        y2, fill=Colour)
 
-def addCharacter(state,hc):
+def recognizeHanzi( recognition,state, canvas, window, frame):
+    if state.currentWidgetList==state.learnWidgetList:
+        state.learnWidgetList[6]["text"] = recognition.recognize(canvas, window, frame)
+    if state.currentWidgetList==state.testWidgetList:
+        if recognition.checkIfCapturedSignIsCorrect:
+            addToLearnedL = state.addToList(state.listOfLearnedCharacters)
+            remFromTL = state.removeFromList(state.listOfTrainingCharacters)
+            addToLearnedL( state.learnWidgetList[6]["text"])
+            remFromTL( state.learnWidgetList[6]["text"])
+
+def addCharacter(state,hc,canvas):
     if state.currentWidgetList == state.learnWidgetList and state.listOfLearningCharacters:
         addToTrainingList(state,hc)
+        clearCanvas(canvas)
     elif state.browseWidgetList[1].tag_ranges("sel") and state.listOfAllCharacters:
         addToLearningList(state)
 
@@ -42,7 +53,6 @@ def addToLearningList(state):
     text = ""
     for key in state.listOfAllCharacters:
         text = text + key + " "
-    print(text)
     state.browseWidgetList[1].tag_remove(tk.SEL, "1.0", tk.END)
     state.browseWidgetList[1].configure(state='normal')
     state.browseWidgetList[1].delete(1.0, tk.END)
@@ -88,6 +98,7 @@ def setLearningUI(state,hc):
     setLearningTranslation(state, c)
 
 def setValuesOfLearningUI(state,c,hanzi):
+    state.learnWidgetList[6]["text"] = ""
     state.learnWidgetList[8]["text"] = hanzi
     state.learnWidgetList[10]["text"] = c.strokesNumber
     state.learnWidgetList[12]["text"] = c.frequencyRank
@@ -131,18 +142,25 @@ def setNewValues(state,hc):
         if state.listOfLearningCharacters:
             setLearningUI(state,hc)
         else:
-            setEmptyUI(state)
+            setEmptyLearningUI(state)
     if state.currentWidgetList == state.testWidgetList:
         if state.listOfTrainingCharacters:
             setTrainingUI(state,hc)
         else:
-            setEmptyUI(state)
+            setEmptyTrainingUI(state)
 
-def setEmptyUI(state):
+def setEmptyLearningUI(state):
     text = ""
+    state.learnWidgetList[6]["text"] = ""
     state.learnWidgetList[8]["text"] = "Empty"
     state.learnWidgetList[10]["text"] = ""
     state.learnWidgetList[12]["text"] = ""
     state.learnWidgetList[14]["text"] = ""
+    startSettingTranslation(state)
+    endSettingTranslation(state,text)
+
+def setEmptyTrainingUI(state):
+    text=""
+    state.testWidgetList[6]["text"] = ""
     startSettingTranslation(state)
     endSettingTranslation(state,text)

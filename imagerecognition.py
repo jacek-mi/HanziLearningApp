@@ -11,6 +11,11 @@ class ImageRecognition:
         if (label1["text"] == label2["text"]):
             return True
         return False
+    def checkIfCapturedSignIsCorrect(self,state,sign):
+        if (state.listOfTrainingCharacters[state.currentTrainingIndex]== sign):
+            return True
+        return False
+
     def getter(self,widget,window,frame):
         x = window.winfo_rootx() + frame.winfo_x() + widget.winfo_x()
         y = window.winfo_rooty() + widget.winfo_y()
