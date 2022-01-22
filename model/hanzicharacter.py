@@ -47,7 +47,7 @@ class WebScrapper():
         abo = self.soup.find_all("div", class_="abo")
         pageText = ""
         for element in abo:
-            pParams =  element.find_all("p")
+            pParams = element.find_all("p")
         for element in pParams:
             pageText = pageText + "\n" + element.text
         myList = pageText.replace("Examples", "\nExamples").replace("Other", "\nOther").strip().splitlines()
