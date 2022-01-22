@@ -1,4 +1,3 @@
-
 import viewmodel.pages as pg
 import tkinter as tk
 from tkinter import ttk
@@ -7,10 +6,10 @@ from pathlib import Path
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path("./assets")
 
-def relative_to_assets(path: str) -> Path:
+def relativeToAssets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
 
-def drawInteractiveUI():
+def drawUI():
     window = tk.Tk()
     window.title('Project')
     window.geometry("1200x800")
@@ -19,40 +18,49 @@ def drawInteractiveUI():
     frame.pack()
 
     pagesViewModel = pg.Pages(window,frame)
+    selectButtonImage = tk.PhotoImage(file=relativeToAssets("select.png"))
+    selectButton = tk.Button(image=selectButtonImage, borderwidth=0,
+    highlightthickness=0, command=lambda: pagesViewModel.selectResultsButton(),relief="flat")
 
-    addButtonImage = tk.PhotoImage(file=relative_to_assets("add.png"))
-    addButton = tk.Button(image=addButtonImage,borderwidth=0,highlightthickness=0,
-                            command=lambda: pagesViewModel.addButton(),relief="flat")
+    CurrentHskLevel = tk.Label(frame, bg="#256150", anchor="nw", text="Current HSK: ",
+                                 font=("Montserrat Bold", 36 * -1), fg="#FFFFFF")
+    CurrentHskLevelSpinbox = ttk.Spinbox(frame,from_= 1 , to= 6,wrap=True)
+    printResultsButtonImage = tk.PhotoImage(file=relativeToAssets("print.png"))
+    printResultsButton = tk.Button(image=printResultsButtonImage,borderwidth=0,
+        highlightthickness=0,command=lambda: pagesViewModel.printRessultsButton(),relief="flat")
+
+    addButtonImage = tk.PhotoImage(file=relativeToAssets("add.png"))
+    addButton = tk.Button(image=addButtonImage, borderwidth=0, highlightthickness=0,
+                          command=lambda: pagesViewModel.addButton(), relief="flat")
 
     title = tk.Label(frame, bg="#256150", anchor="nw", text="Hanzi Learing App",
                      font=("Montserrat Bold", 64 * -1), fg="#FFFFFF")
     canvas = tk.Canvas(frame, bg="white",height=480.0,width=500.0)
 
-    learnButtonImage = tk.PhotoImage(file=relative_to_assets("learn.png"))
+    learnButtonImage = tk.PhotoImage(file=relativeToAssets("learn.png"))
     learnButton = tk.Button(image=learnButtonImage,borderwidth=0,highlightthickness=0,
                             command=lambda: pagesViewModel.enterLearnMode(),relief="flat")
 
-    practiceButtonImage = tk.PhotoImage(file=relative_to_assets("practice.png"))
+    practiceButtonImage = tk.PhotoImage(file=relativeToAssets("practice.png"))
     practiceButton = tk.Button(image=practiceButtonImage,borderwidth=0,highlightthickness=0,
                             command=lambda: pagesViewModel.enterTestMode(),relief="flat")
-    browseButtonImage = tk.PhotoImage(file=relative_to_assets("browse.png"))
+    browseButtonImage = tk.PhotoImage(file=relativeToAssets("browse.png"))
     browseButton = tk.Button(image=browseButtonImage,borderwidth=0,highlightthickness=0,
                              command=lambda: pagesViewModel.enterBrowseMode(),relief="flat")
 
-    clearButtonImage = tk.PhotoImage(file=relative_to_assets("clear.png"))
+    clearButtonImage = tk.PhotoImage(file=relativeToAssets("clear.png"))
     clearButton = tk.Button(image=clearButtonImage,borderwidth=0,highlightthickness=0,
     command=lambda: pagesViewModel.clearCanvas() ,relief="flat")
 
-    checkButtonImage = tk.PhotoImage(file=relative_to_assets("check.png"))
+    checkButtonImage = tk.PhotoImage(file=relativeToAssets("check.png"))
     checkButton = tk.Button(image=checkButtonImage,borderwidth=0,highlightthickness=0,
     command=lambda: pagesViewModel.checkButton(),relief="flat")
 
-    previousButtonImage = tk.PhotoImage(
-        file=relative_to_assets("previous.png"))
+    previousButtonImage = tk.PhotoImage(file=relativeToAssets("previous.png"))
     previousButton = tk.Button(image=previousButtonImage,borderwidth=0,highlightthickness=0,
                                command=lambda: pagesViewModel.previousButton(),relief="flat")
 
-    nextButtonImage = tk.PhotoImage(file=relative_to_assets("next.png"))
+    nextButtonImage = tk.PhotoImage(file=relativeToAssets("next.png"))
     nextButton = tk.Button(image=nextButtonImage,borderwidth=0,highlightthickness=0,
                            command=lambda: pagesViewModel.nextButton(),relief="flat")
 
@@ -110,17 +118,14 @@ def drawInteractiveUI():
     currentListOfSignsData.insert('end', "")
     currentListOfSignsData.configure(state='disabled')
 
-    def handle_keypress(event):
-        vm.keyhandler(event);
-    def handle_mouse(event):
-        pagesViewModel.paintOnCanvas(event)
+
 
     pagesViewModel.createList(pagesViewModel.alwaysOnWidgetList,title,learnButton,practiceButton,browseButton)
     pagesViewModel.createList(pagesViewModel.browseWidgetList, currentListOfSigns, currentListOfSignsData,
-                     scrollbarList, addButton)
+                     scrollbarList, addButton, CurrentHskLevel, CurrentHskLevelSpinbox, selectButton)
 
     pagesViewModel.createList(pagesViewModel.testWidgetList,canvas,clearButton,checkButton,previousButton,nextButton,
-                     capturedCharacter,capturedCharacterData,translation,translationData,scrollbar)
+                     capturedCharacter,capturedCharacterData,translation,translationData,scrollbar,printResultsButton)
 
     pagesViewModel.createList(pagesViewModel.learnWidgetList,canvas,clearButton,checkButton,previousButton,
                      nextButton,capturedCharacter,capturedCharacterData,signHanzi,signHanziData,
@@ -130,13 +135,18 @@ def drawInteractiveUI():
     pagesViewModel.initializeModes()
     pagesViewModel.placeAlwaysOnWidgets()
     pagesViewModel.enterBrowseMode()
+
+    def handle_keypress(event):
+        pagesViewModel.keyHandler(event)
+    def handle_mouse(event):
+        pagesViewModel.paintOnCanvas(event)
+
     window.bind('<Key>', handle_keypress)
     canvas.bind("<B1-Motion>", handle_mouse)
     window.mainloop()
 
-
 if __name__ == "__main__":
-    drawInteractiveUI()
+    drawUI()
 
 
 

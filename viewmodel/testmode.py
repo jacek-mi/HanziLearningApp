@@ -15,6 +15,7 @@ class TestMode:
         self.widgets[7].place(x=0.0, y=191.0)
         self.widgets[8].place(x=0.0, y=236)
         self.widgets[9].place(x=345, y=237, height=282)
+        self.widgets[10].place(x=100, y=700)
         self.openPage()
     
     

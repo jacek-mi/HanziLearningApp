@@ -48,6 +48,7 @@ class Pages:
         if self.currentWidgetList == self.testWidgetList or self.currentWidgetList == self.learnWidgetList:
             x1, y1, x2, y2 = (event.x - 9), (event.y - 9), (event.x + 9), (event.y + 9)
             self.currentWidgetList[0].create_oval(x1, y1, x2, y2, fill="Black")
+
     def enterBrowseMode(self):
         self.clearPage()
         self.currentWidgetList = self.browseWidgetList
@@ -99,3 +100,12 @@ class Pages:
         d = os.getcwd()
         d = d + '/model/hanzirecognition/image.png'
         ImageGrab.grab().crop((x, y, x1, y1)).save(d)
+
+    def printRessultsButton(self):
+        self.state.printResults()
+
+    def keyHandler(self,event):
+        pass
+
+    def selectResultsButton(self):
+        self.browseMode.selectResults(self.state)
