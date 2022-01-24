@@ -25,6 +25,7 @@ class LearnMode:
         self.widgets[16].place(x=630.0, y=381)
         self.widgets[17].place(x=975, y=382, height=282)
         self.widgets[18].place(x=1000, y=420)
+        self.widgets[19].place(x=30.0, y=750.0)
         self.openPage()
 
     def openPage(self):
@@ -56,3 +57,4 @@ class LearnMode:
         self.widgets[16].delete(1.0, tk.END)
         self.widgets[16].insert('end', pageData['translation'])
         self.widgets[16].configure(state='disabled')
+        self.widgets[19]["text"] = pageData["announcement"]

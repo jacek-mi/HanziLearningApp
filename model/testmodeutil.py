@@ -5,7 +5,8 @@ class TestModeUtil:
         self.state = state
         self.pageData  = {
             "capturedSign": "",
-            "translation": ""
+            "translation": "",
+            "announcement": ""
         }
         self.recognition = ir.ImageRecognition()
 
@@ -39,8 +40,9 @@ class TestModeUtil:
         return self.pageData
 
     def generateTestingPageDataAfterCheck(self):
+        sign = self.recognition.recognize()
         if self.state.listOfTestingCharacters:
-            sign = self.recognition.recognize()
+
             self.pageData["capturedSign"] = sign
             if sign == self.state.listOfTestingCharacters[self.state.currentTestingIndex]:
                 addToLearnedCharacters = self.state.addToList(self.state.listOfLearnedCharacters)
@@ -50,12 +52,15 @@ class TestModeUtil:
                 self.state.currentTestingIndex =0
                 self.generateTestingPageDataAfterStart()
                 self.pageData["capturedSign"] = sign
+                self.pageData["announcement"] = "Well Done"
                 return self.pageData
             else:
                 self.testingPageDataFor(self.state.listOfTestingCharacters[self.state.currentTestingIndex])
                 self.pageData["capturedSign"] = sign
+                self.pageData["announcement"] = "Uncorrect Sign"
                 return self.pageData
         self.pageData = dict.fromkeys(self.pageData, "")
+        self.pageData["capturedSign"] = sign
         return self.pageData
 
     def testingPageDataFor(self,sign):
@@ -67,5 +72,6 @@ class TestModeUtil:
                 text = text + " -" + tr + "\n"
             text = text + "\n"
         self.pageData["translation"]=text
+        self.pageData["announcement"]=""
 
 

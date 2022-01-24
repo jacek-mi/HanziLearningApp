@@ -9,7 +9,8 @@ class LearnModeUtil:
             "strokesNumber": "",
             "frequencyRank": "",
             "codepoint": "",
-            "translation": ""
+            "translation": "",
+            "announcement":""
         }
         self.recognition = ir.ImageRecognition()
 
@@ -82,5 +83,4 @@ class LearnModeUtil:
                 text = text + " -" + tr + "\n"
             text = text + "\n"
         self.pageData["translation"]=text
-
-
+        self.pageData["announcement"]=""

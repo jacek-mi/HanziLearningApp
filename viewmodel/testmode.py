@@ -11,11 +11,12 @@ class TestMode:
         self.widgets[3].place(x=819.0, y=708.0, width=158.0, height=46.0)
         self.widgets[4].place(x=1006.0, y=708.0, width=158.0, height=46.0)
         self.widgets[5].place(x=880.0, y=191.0)
-        self.widgets[6].place(x=1000.0, y=240.0)
+        self.widgets[6].place(x=1120.0, y=191.0)
         self.widgets[7].place(x=0.0, y=191.0)
         self.widgets[8].place(x=0.0, y=236)
         self.widgets[9].place(x=345, y=237, height=282)
         self.widgets[10].place(x=100, y=700)
+        self.widgets[11].place(x=880.0, y=240.0)
         self.openPage()
     
     
@@ -40,4 +41,5 @@ class TestMode:
         self.widgets[8].delete(1.0, tk.END)
         self.widgets[8].insert('end', pageData['translation'])
         self.widgets[8].configure(state='disabled')
+        self.widgets[11]["text"] = pageData["announcement"]
     
