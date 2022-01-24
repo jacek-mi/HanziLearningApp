@@ -1,5 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
+
+
 class Character:
     def __init__(self, hanzi):
         self.hanzi=hanzi
@@ -26,7 +28,8 @@ class Character:
         print("Number of strokes "+str(self.strokesNumber))
         print("Index number " +  str(self.indexNumber))
 
-class WebScrapper():
+
+class WebScrapper:
     def __init__(self,hanzi):
         self.hanzi=hanzi
         self.url = "http://hanzidb.org/character/" + requests.utils.quote(hanzi)
@@ -43,6 +46,7 @@ class WebScrapper():
             values.append(lines)
         myDict = dict(zip(keys,values))
         return myDict
+
     def getHanziData(self):
         abo = self.soup.find_all("div", class_="abo")
         pageText = ""
@@ -57,11 +61,13 @@ class WebScrapper():
         myDict = dict(zip(keys,values))
         return myDict
 
-class PageScrapper():
+
+class PageScrapper:
     def __init__(self,hsk):
         self.url = "http://hanzidb.org/character-list/hsk/level-" + str(hsk)
         self.page = requests.get(self.url)
         self.soup = BeautifulSoup(self.page.content, "html.parser")
+
     def getHanziList(self):
         href = self.soup.find_all("a",href=True)
         pagesList = []

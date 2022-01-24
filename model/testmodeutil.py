@@ -40,9 +40,9 @@ class TestModeUtil:
         return self.pageData
 
     def generateTestingPageDataAfterCheck(self):
-        sign = self.recognition.recognize()
+        sign = self.recognition.recognize(" ")
         if self.state.listOfTestingCharacters:
-
+            sign = self.recognition.recognize(self.state.listOfTestingCharacters[self.state.currentTestingIndex])
             self.pageData["capturedSign"] = sign
             if sign == self.state.listOfTestingCharacters[self.state.currentTestingIndex]:
                 addToLearnedCharacters = self.state.addToList(self.state.listOfLearnedCharacters)

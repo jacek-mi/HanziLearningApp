@@ -63,10 +63,10 @@ class LearnModeUtil:
     def generateLearningPageDataAfterCheck(self):
         if self.state.listOfLearningCharacters:
             self.learningPageDataFor(self.state.listOfLearningCharacters[self.state.currentLearningIndex])
-            self.pageData["capturedSign"]=self.recognition.recognize()
+            self.pageData["capturedSign"]=self.recognition.recognize(self.state.listOfLearningCharacters[self.state.currentLearningIndex])
             return self.pageData
         self.pageData = dict.fromkeys(self.pageData, "")
-        self.pageData["capturedSign"] = self.recognition.recognize()
+        self.pageData["capturedSign"] = self.recognition.recognize(" ")
         return self.pageData
 
     def learningPageDataFor(self,sign):
@@ -84,3 +84,5 @@ class LearnModeUtil:
             text = text + "\n"
         self.pageData["translation"]=text
         self.pageData["announcement"]=""
+
+
