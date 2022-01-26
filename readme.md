@@ -19,21 +19,23 @@ which is optical character recognition engine for varius operating systems.
 ### Browse Page
 
 User can select what signs he will be learning, during learning session on page **Browse**.
-<img src="C:\Users\Jacek\Desktop\Usage\1.png"/>
+![1](https://user-images.githubusercontent.com/87201144/151217152-a5a294a2-0915-457d-afdc-2d563a8380d5.png)
 User can also change HSK Level.
-<img src="C:\Users\Jacek\Desktop\Usage\2.png"/>
+![2](https://user-images.githubusercontent.com/87201144/151217159-653c589c-f5fa-44cd-8c58-36777694e341.png)
+
+
 
 ### Learn Page
 
 In these page, user can read data about current sign, and practice writing it.
-<img src="C:\Users\Jacek\Desktop\Usage\3.png"/>
+![3](https://user-images.githubusercontent.com/87201144/151217168-6da0ca99-7b53-4c2a-8820-2d8026892456.png)
 
 ### Practice Page
 
 In practice page user can test their knowledge about character. After correct input, Hanzi character will be 
 added to list of learned characters, which can be printed to pdf.
-<img src="C:\Users\Jacek\Desktop\Usage\4.png"/>
+![4](https://user-images.githubusercontent.com/87201144/151217178-96424e31-a696-4a6c-b774-7b2f0f3616e8.png)
 
 ### Results
-<img src="C:\Users\Jacek\Desktop\Usage\5.png"/>
+![5](https://user-images.githubusercontent.com/87201144/151217185-ae9f99a3-b57e-4fe2-8f24-96546c59be0e.png)
 
