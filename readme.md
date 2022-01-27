@@ -1,7 +1,7 @@
 # Hanzi Learning App 
 
 Hanzi Learning App is application for learning Chinese Characters (Hanzi) in simplified form.
-User can learn sign required for HSK(Hanyu Shuiping Kaoshi) level's 1-6 (2010-2021) system.
+User can learn signs required for HSK(Hanyu Shuiping Kaoshi) level's 1-6 (2010-2021) system.
 
 [Wikipedia page about Hanzi](https://en.wikipedia.org/wiki/Chinese_characters)
 
