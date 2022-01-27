@@ -71,6 +71,7 @@ class TestModeUtil:
             for tr in signData.translation[key]:
                 text = text + " -" + tr + "\n"
             text = text + "\n"
+        text= text.replace(sign,"")
         self.pageData["translation"]=text
         self.pageData["announcement"]=""
 

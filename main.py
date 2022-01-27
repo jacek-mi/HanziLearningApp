@@ -2,17 +2,12 @@ import viewmodel.pages as pg
 import tkinter as tk
 from tkinter import ttk
 from pathlib import Path
-
-OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path("./assets")
-
-
-def relativeToAssets(path: str) -> Path:
-    return ASSETS_PATH / Path(path)
-
+import os
 
 def drawUI():
     window = tk.Tk()
+    d = os.getcwd()
+    d = d + '/assets/'
     window.title('Project')
     window.geometry("1200x800")
     window.resizable(False, False)
@@ -20,7 +15,7 @@ def drawUI():
     frame.pack()
 
     pagesViewModel = pg.Pages(window, frame)
-    selectButtonImage = tk.PhotoImage(file=relativeToAssets("select.png"))
+    selectButtonImage = tk.PhotoImage(file= d + "select.png")
     selectButton = tk.Button(image=selectButtonImage, borderwidth=0,
                              highlightthickness=0, command=lambda: pagesViewModel.selectResultsButton(), relief="flat")
     checkedSignInformation = tk.Label(frame, bg="#256150", anchor="nw", text="TEST",
@@ -28,12 +23,12 @@ def drawUI():
     CurrentHskLevel = tk.Label(frame, bg="#256150", anchor="nw", text="Current HSK: ",
                                font=("Montserrat Bold", 36 * -1), fg="#FFFFFF")
     CurrentHskLevelSpinbox = ttk.Spinbox(frame, from_=1, to=6, wrap=True)
-    printResultsButtonImage = tk.PhotoImage(file=relativeToAssets("print.png"))
+    printResultsButtonImage = tk.PhotoImage(file=d +"print.png")
     printResultsButton = tk.Button(image=printResultsButtonImage, borderwidth=0,
                                    highlightthickness=0, command=lambda: pagesViewModel.printRessultsButton(),
                                    relief="flat")
 
-    addButtonImage = tk.PhotoImage(file=relativeToAssets("add.png"))
+    addButtonImage = tk.PhotoImage(file=d + "add.png")
     addButton = tk.Button(image=addButtonImage, borderwidth=0, highlightthickness=0,
                           command=lambda: pagesViewModel.addButton(), relief="flat")
 
@@ -41,30 +36,30 @@ def drawUI():
                      font=("Montserrat Bold", 64 * -1), fg="#FFFFFF")
     canvas = tk.Canvas(frame, bg="white", height=480.0, width=500.0)
 
-    learnButtonImage = tk.PhotoImage(file=relativeToAssets("learn.png"))
+    learnButtonImage = tk.PhotoImage(file=d+"learn.png")
     learnButton = tk.Button(image=learnButtonImage, borderwidth=0, highlightthickness=0,
                             command=lambda: pagesViewModel.enterLearnMode(), relief="flat")
 
-    practiceButtonImage = tk.PhotoImage(file=relativeToAssets("practice.png"))
+    practiceButtonImage = tk.PhotoImage(file=d+"practice.png")
     practiceButton = tk.Button(image=practiceButtonImage, borderwidth=0, highlightthickness=0,
                                command=lambda: pagesViewModel.enterTestMode(), relief="flat")
-    browseButtonImage = tk.PhotoImage(file=relativeToAssets("browse.png"))
+    browseButtonImage = tk.PhotoImage(file=d +"browse.png")
     browseButton = tk.Button(image=browseButtonImage, borderwidth=0, highlightthickness=0,
                              command=lambda: pagesViewModel.enterBrowseMode(), relief="flat")
 
-    clearButtonImage = tk.PhotoImage(file=relativeToAssets("clear.png"))
+    clearButtonImage = tk.PhotoImage(file=d+"clear.png")
     clearButton = tk.Button(image=clearButtonImage, borderwidth=0, highlightthickness=0,
                             command=lambda: pagesViewModel.clearCanvas(), relief="flat")
 
-    checkButtonImage = tk.PhotoImage(file=relativeToAssets("check.png"))
+    checkButtonImage = tk.PhotoImage(file=d+"check.png")
     checkButton = tk.Button(image=checkButtonImage, borderwidth=0, highlightthickness=0,
                             command=lambda: pagesViewModel.checkButton(), relief="flat")
 
-    previousButtonImage = tk.PhotoImage(file=relativeToAssets("previous.png"))
+    previousButtonImage = tk.PhotoImage(file=d+"previous.png")
     previousButton = tk.Button(image=previousButtonImage, borderwidth=0, highlightthickness=0,
                                command=lambda: pagesViewModel.previousButton(), relief="flat")
 
-    nextButtonImage = tk.PhotoImage(file=relativeToAssets("next.png"))
+    nextButtonImage = tk.PhotoImage(file=d+"next.png")
     nextButton = tk.Button(image=nextButtonImage, borderwidth=0, highlightthickness=0,
                            command=lambda: pagesViewModel.nextButton(), relief="flat")
 
